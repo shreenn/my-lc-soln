@@ -1,0 +1,57 @@
+int orangesRotting(vector<vector<int>>& grid) {
+        int rows = grid.size();
+        int cols = grid[0].size();
+
+        queue<pair<int, int>> q;
+        int fresh = 0;
+
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < cols; ++j) {
+                if (grid[i][j] == 2) {
+                    q.push({i, j});
+                } else if (grid[i][j] == 1) {
+                    fresh++;
+                }
+            }
+        } //ok
+
+        if (fresh == 0) return 0; // all rotten from the start, return
+
+        // Directions for up, down, left, right (general)
+        vector<vector<int>> directions = {{-1,0}, {1,0}, {0,-1}, {0,1}};
+  
+        int minutes = 0;
+
+        
+        while (!q.empty()) { //each iteration=1 min passed
+            int size = q.size();               //no of rotten oranges curr in queue
+            bool rottedThisMinute = false;     //to check rotten in this minute/iteration
+
+            for (int i = 0; i < size; ++i) {   //we are iterating q and then taking q se 1 rotten ele
+                auto [x, y] = q.front();
+                q.pop();
+
+                for (auto& dir : directions) {  //dir is one of the directions
+                    int newX = x + dir[0];      //like x coordinate mei ek dir ka first part add kar rhe hai, newX is the new x coord 
+                    int newY = y + dir[1];
+
+                    if (newX >= 0 && newX < rows &&
+                        newY >= 0 && newY < cols &&
+                        grid[newX][newY] == 1) {  //not 0 not 2
+                        
+                        // Rot the fresh orange
+                        grid[newX][newY] = 2;
+                        q.push({newX, newY});
+                        fresh--;
+                        rottedThisMinute = true;
+                    }
+                }
+            }
+
+            if (rottedThisMinute) minutes++;
+        }
+
+        // Step 4: If there are fresh oranges left, return -1
+        return fresh == 0 ? minutes : -1;
+    }
+};
