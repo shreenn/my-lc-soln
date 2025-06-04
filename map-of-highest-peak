@@ -1,0 +1,43 @@
+vector<vector<int>> directions {{0,1}, {0,-1}, {-1,0}, {1,0}};
+
+    vector<vector<int>> highestPeak(vector<vector<int>>& isWater) {
+        int rows = isWater.size();
+        int cols = isWater[0].size();
+
+        vector<vector<int>> height(rows, vector<int>(cols, -1)); //-1 means unassigned
+
+        queue <pair<int,int>> q;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if(isWater[i][j]==1){
+                    height[i][j]=0; //ans block mei water 0 fixed. yaha se queue start
+                    q.push({i,j});
+                }
+            }
+        }
+
+        while(!q.empty()){
+            int size=q.size();
+
+            while(size--){
+                pair<int,int> curr=q.front();
+                q.pop();
+
+                int i=curr.first;
+                int j=curr.second;
+
+                for( auto &dir : directions){
+                    int new_i=i+dir[0];
+                    int new_j=j+dir[1];
+
+                    if(new_i >= 0 && new_i< rows 
+                    && new_j>=0 && new_j < cols 
+                    && height[new_i][new_j]==-1 ){   //-1 as in unassigned honi chaie
+                        height[new_i][new_j]= height[i][j]+1;  // to maximize but to also make difference not greater than 1
+                        q.push({new_i,new_j});
+                    }
+                }
+            }
+        }
+        return height;
+    }
