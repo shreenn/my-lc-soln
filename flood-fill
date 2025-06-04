@@ -1,0 +1,34 @@
+vector<vector<int>> directions{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc,int color) {
+        int rows = image.size();
+        int cols = image[0].size();
+
+        int og = image[sr][sc]; 
+       
+        if (og == color) return image; //imp else it gives tle
+
+
+        queue<pair<int, int>> q;
+        q.push({sr, sc});
+
+        image[sr][sc] = color;
+
+        while (!q.empty()) {
+            auto [x, y] = q.front();
+            q.pop();
+
+            for (auto& dir : directions) {
+                int newX = x + dir[0];
+                int newY = y + dir[1];
+
+                if (newX >= 0 && newX < rows && newY >= 0 && newY < cols &&
+                    image[newX][newY] == og) {
+
+                    image[newX][newY] = color;
+                    q.push({newX, newY});
+                }
+            }
+        }
+        return image;
+    }
